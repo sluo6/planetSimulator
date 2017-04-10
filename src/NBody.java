@@ -1,9 +1,40 @@
 import java.util.Scanner;
 
 public class NBody {
+	static int planetNumber;
+	
+	
+	public static double inputTotaltime(){
+		System.out.println("Please enter total simulation time:");
+		@SuppressWarnings("resource")
+		Scanner keyBoard = new Scanner(System.in);
+		double totalTime = keyBoard.nextDouble();
+		return totalTime;
+	}
+	
+	public static double inputdt(){
+		System.out.println("Please enter fragment time:");
+		@SuppressWarnings("resource")
+		Scanner keyBoard = new Scanner(System.in);
+		double dt = keyBoard.nextDouble();		
+		return dt;
+	}
+	public static String inputPath(){
+		System.out.println("Please enter simulation file path:");
+		@SuppressWarnings("resource")
+		Scanner keyBoard = new Scanner(System.in);
+		String path = keyBoard.nextLine();		
+		return path;
+	}
+	
+	public static int readNumberofPlanets(String planetsTxtPath) {
+		In input = new In(planetsTxtPath);
+		int output = input.readInt();
+		return output;
+	}
 
 	public static Planet[] readPlanets(String planetsTxtPath) {
-		Planet[] planetArray= new Planet[5];
+		Planet[] planetArray= new Planet[planetNumber];
 		for(int i = 0; i< planetArray.length; i++){
 			planetArray[i] = new Planet(0,0,0,0,0,"0");
 		}
@@ -22,10 +53,10 @@ public class NBody {
 		return planetArray;
 	}
 
+
 	public static double readRadius(String planetsTxtPath) {
 		In input = new In(planetsTxtPath);
-		input.readInt();
-		//input.readDouble();
+		input.readInt();		
 		double output = input.readDouble();
 		return output;
 	}
@@ -44,28 +75,28 @@ public class NBody {
 	
 	
 	public static void main(String[] args){
-		Scanner keyBoard = new Scanner(System.in);
-		double T = keyBoard.nextDouble();
-		double dt = keyBoard.nextDouble();
-		//String filename = keyBoard.nextLine();
-		String planetsTxtPath = "./data/planets.txt";
+		String planetsTxtPath = inputPath();
+		double T = inputTotaltime();
+		double dt = inputdt();
+		
 		double universeRadius = NBody.readRadius(planetsTxtPath);
+		planetNumber= readNumberofPlanets(planetsTxtPath);
 		Planet[] inputPlanets = NBody.readPlanets(planetsTxtPath); 
 		
 		
 		
 		for(double t = 0; t<=T; t=t+dt){
-			double[] xForces = new double[5];
-			double[] yForces = new double[5];
-			//for(int j = 0; j < inputPlanets.length; j ++){
+			double[] xForces = new double[planetNumber];
+			double[] yForces = new double[planetNumber];
+			
 				for(int i = 0; i < inputPlanets.length; i++){
 					xForces[i]=inputPlanets[i].calcNetForceExertedByX(inputPlanets);
 					yForces[i]=inputPlanets[i].calcNetForceExertedByY(inputPlanets);
 					//System.out.println("xForce+" + i + "=" + xForces[i]);
 					//System.out.println("yForce+" + i + "=" +yForces[i]);
-	//	}
+	
 				inputPlanets[i].update(t, xForces[i], yForces[i]);
-				System.out.println("j="+i); 
+				System.out.println("i="+i); 
 				System.out.println("Planet" + i  + "xPos" + "=" + inputPlanets[i].xxPos);
 				System.out.println("Planet" + i  + "yPos" + "=" + inputPlanets[i].yyPos);
 		StdDraw.clear();
